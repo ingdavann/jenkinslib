@@ -1,0 +1,45 @@
+@Library(['jenkinslib']) _
+
+pipeline {
+    agent any
+
+    stages {
+        
+        stage('git clone'){
+            steps{
+                git branch: 'main', url: 'https://github.com/MuyleangIng/nextjs_docker.git'
+            }
+        }
+        
+        stage('Call function call apiWithGroovy Write Docker file to git repo') {
+            steps {
+                script {
+                    try {
+                        // Validate required parameters
+                        def DOCKER_USER = 'ingdavanner'
+                        def DOCKER_PASS = 'Admin@123'
+                        def TAGS = env.BUILD_NUMBER
+                        def IMAGE_NAME = 'nextjs-docker'
+                        
+                        if (!TAGS || !IMAGE_NAME) {
+                            throw new IllegalArgumentException("Missing required parameters for Docker.")
+                        }
+
+                        // Call function nextWithDocker with separate arguments
+                        nextWithDocker(DOCKER_USER,DOCKER_PASS,TAGS, IMAGE_NAME)
+                    } catch (Exception e) {
+                        echo "An error occurred: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                        error("Pipeline failed due to an error.")
+                    }
+                }
+            }
+        }
+
+        stage('list dir'){
+            steps{
+                sh "ls -lrt"
+            }
+        }
+    }
+}
