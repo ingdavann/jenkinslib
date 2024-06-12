@@ -15,7 +15,7 @@ pipeline {
                     try {
                         // Validate required parameters
                         def DOCKER_USER = 'ingdavanner'
-                        def DOCKER_PASS = 'Admin@123'
+                        def DOCKER_PASS = 'admin@123'
                         def TAGS = env.BUILD_NUMBER
                         def IMAGE_NAME = 'nextjs-docker'
                         
