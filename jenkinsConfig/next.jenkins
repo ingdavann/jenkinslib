@@ -4,13 +4,11 @@ pipeline {
     agent any
 
     stages {
-        
         stage('git clone'){
-            steps{
+            steps {
                git 'https://github.com/MuyleangIng/nextjs_docker.git'
             }
         }
-        
         stage('Call function call apiWithGroovy Write Docker file to git repo') {
             steps {
                 script {
@@ -35,10 +33,11 @@ pipeline {
                 }
             }
         }
-
         stage('list dir'){
             steps{
-                sh "ls -lrt"
+                sh '''
+                ls -lrt
+                '''
             }
         }
     }
