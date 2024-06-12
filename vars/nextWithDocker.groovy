@@ -1,14 +1,21 @@
-// def call(String DOCKER_USER, String DOCKER_PASS, String TAGS, String IMAGE_NAME) {
-//     def dockerfileContent = libraryResource 'next.dockerfile'
-//     writeFile file: 'Dockerfile', text: dockerfileContent
-//     sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
-//     sh 'docker build -t $DOCKER_USER/$IMAGE_NAME:$TAGS .'
-//     sh 'docker push $DOCKER_USER/$IMAGE_NAME:$TAGS'
-// }
+def call(String DOCKER_USER,String DOCKER_PASS,String TAGS, String IMAGE_NAME) {
+    try {
+        // Validate required parameters
+        if (!TAGS || !IMAGE_NAME) {
+            throw new IllegalArgumentException("Missing required parameters for Docker.")
+        }
 
-def call(String DOCKER_TAG, String ImageName) {
-    def dockerfileContent = libraryResource 'next.dockerfile'
-    writeFile file: 'Dockerfile', text: dockerfileContent
-    sh "docker build -t ${ImageName}:${DOCKER_TAG} ."
-    sh "echo ${DOCKER_TAG}"
-} 
+        // Docker build
+        sh "docker build -t ${DOCKER_USER}/${IMAGE_NAME}:${TAGS} ."
+
+        // Docker login (if required - uncomment and provide credentials)
+        sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
+
+        // Docker push (if required - uncomment)
+        sh "docker push ${DOCKER_USER}/${IMAGE_NAME}:${TAGS}"
+    } catch (Exception e) {
+        echo "An error occurred: ${e.message}"
+        currentBuild.result = 'FAILURE'
+        error("Pipeline failed due to an error.")
+    }
+}
