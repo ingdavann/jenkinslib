@@ -1,0 +1,23 @@
+@Library(['jenkinslib']) _
+pipeline {
+    agent any
+    environment {
+        BotToken = "6350808372:AAGSUi-XmR5WfUDaRPkQKI8A3WVo36Rqti4"
+        chat_id = "98920097"
+    }
+  
+    stages {
+        stage('clean workspace){
+            steps{
+                cleanWs()
+            }
+        }
+        
+        stage('Hello') {
+            steps {
+                sh 'curl -s -X POST https://api.telegram.org/bot${env.BotToken}/sendMessage -d chat_id=${env.chat_id} -d text="Good Afternoon!"'
+
+            }
+        }
+    }
+}

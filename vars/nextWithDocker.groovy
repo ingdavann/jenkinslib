@@ -16,6 +16,8 @@ def call(String DOCKER_USER,String DOCKER_PASS,String TAGS, String IMAGE_NAME) {
     } catch (Exception e) {
         echo "An error occurred: ${e.message}"
         currentBuild.result = 'FAILURE'
-        error("Pipeline failed due to an error.")
-    }
+        error("Pipeline failed due to an error.")   
+    }       
 }
+
+
